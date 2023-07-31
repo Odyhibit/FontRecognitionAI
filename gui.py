@@ -26,6 +26,7 @@ image_path_str.set("Font Image")
 main_screen = Frame(notebook)
 main_screen.columnconfigure(0, minsize=400)
 main_screen.columnconfigure(1, minsize=200)
+
 # row 0
 file_lbl = ttk.Label(main_screen, textvariable=image_path_str, wraplength=400)
 file_lbl.grid(column=0, row=0, padx=4, pady=6)
@@ -34,10 +35,10 @@ file_btn.grid(column=1, row=0, padx=4, pady=6)
 # row 1
 preview_lbl = Label(main_screen, bd=2, relief="groove", width=36, height=16)
 preview_lbl.grid(column=0, row=1, rowspan=2, sticky="S", padx=4, pady=6)
-output_lbl = Label(main_screen, text="Font   Certainty")
+output_lbl = Label(main_screen, text="Font   Certainty", height=1)
 output_lbl.grid(column=1, row=1, sticky="S")
-output = Label(main_screen, bd=2, relief="groove", width=16, height=8)
-output.grid(column=1, row=2, sticky="N")
+output = Label(main_screen, bd=2, relief="groove", width=16, height=14)
+output.grid(column=1, row=2, sticky="NSEW", padx=4, pady=6)
 
 # dashboard tab widgets
 dashboard_screen = Frame(notebook)
