@@ -1,13 +1,26 @@
 import tkinter.filedialog
 from tkinter import *
 from tkinter import ttk
+import main
+from tensorflow import keras as keras
 from PIL import Image, ImageTk, ImageOps
 
+
 def pick_cover(event: Event = Event()):
+    global model
     file_name = tkinter.filedialog.askopenfilename(initialdir="./test_images", filetypes=[("image files", ".jpg")])
     if not file_name:
         return
     image_path_str.set(file_name)
+    test_img = main.load_image(file_name)
+    predictions = main.predict_from_image(test_img, model)
+    output.config(textvariable=predictions)
+
+
+def get_model(this_model):
+    model_file = 'EfficientNetV2B1_model'
+    this_model = keras.models.load_model(model_file)
+    # print("model loaded")
 
 
 root = Tk()
@@ -46,9 +59,10 @@ dashboard_screen.columnconfigure(0, minsize=100)
 dashboard_screen.columnconfigure(1, minsize=400)
 dashboard_screen.columnconfigure(2, minsize=100)
 
-
 # notebook tabs
 notebook.add(main_screen, text="Main")
 notebook.add(dashboard_screen, text="Dashboard")
 
+model = None
+root.after(1000, get_model(model))
 root.mainloop()
