@@ -14,7 +14,6 @@ def pick_cover(event: Event = Event()):
     image_path_str.set(file_name)
     test_img = main.load_image(file_name)
     preview_img = Image.open(file_name)
-    preview_img = ImageOps.contain(preview_img, (224, 224))
     preview_img = ImageTk.PhotoImage(preview_img)
     preview_lbl.configure(image=preview_img)
     preview_lbl.image = preview_img
