@@ -13,14 +13,14 @@ def pick_cover(event: Event = Event()):
         return
     image_path_str.set(file_name)
     test_img = main.load_image(file_name)
+    preview_img = Image.open(file_name)
+    preview_img = ImageOps.contain(preview_img, (224, 224))
+    preview_img = ImageTk.PhotoImage(preview_img)
+    preview_lbl.configure(image=preview_img)
+    preview_lbl.image = preview_img
     predictions = main.predict_from_image(test_img, model)
-    output.config(textvariable=predictions)
+    output.config(text=main.get_predictions(predictions[0]))
 
-
-def get_model(this_model):
-    model_file = 'EfficientNetV2B1_model'
-    this_model = keras.models.load_model(model_file)
-    # print("model loaded")
 
 
 root = Tk()
@@ -46,7 +46,8 @@ file_lbl.grid(column=0, row=0, padx=4, pady=6)
 file_btn = Button(main_screen, text="Choose Image", command=pick_cover)
 file_btn.grid(column=1, row=0, padx=4, pady=6)
 # row 1
-preview_lbl = Label(main_screen, bd=2, relief="groove", width=36, height=16)
+placeholder = ImageTk.PhotoImage(Image.open("placeholder.png"))
+preview_lbl = Label(main_screen, bd=2, relief="groove", image=placeholder)
 preview_lbl.grid(column=0, row=1, rowspan=2, sticky="S", padx=4, pady=6)
 output_lbl = Label(main_screen, text="Font   Certainty", height=1)
 output_lbl.grid(column=1, row=1, sticky="S")
@@ -63,6 +64,6 @@ dashboard_screen.columnconfigure(2, minsize=100)
 notebook.add(main_screen, text="Main")
 notebook.add(dashboard_screen, text="Dashboard")
 
-model = None
-root.after(1000, get_model(model))
+model_file = 'EfficientNetV2B1_model'
+model = keras.models.load_model(model_file)
 root.mainloop()
