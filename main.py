@@ -1,10 +1,11 @@
 import os
 import numpy as np
+import tensorflow
 from tensorflow import keras as keras
 
 
 def predict_from_image(test_image: np.array, this_model: keras.models) -> np.array('float'):
-    return this_model.predict(test_image)
+    return this_model.predict(test_image, verbose=0)
 
 
 def load_image(image_file: str):
@@ -35,6 +36,7 @@ def main(files_to_match: [], model):
 
 
 def load_model():
+    tensorflow.get_logger().setLevel('NONE')
     model_file = 'EfficientNetV2B1_model'
     model = keras.models.load_model(model_file)
     return model
