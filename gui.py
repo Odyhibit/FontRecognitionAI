@@ -21,13 +21,6 @@ def pick_cover(event: Event = Event()):
     output.config(text=main.get_predictions(predictions[0]))
 
 
-'''
-splash_root = Tk()
-splash_root.geometry("700x200")
-Label(splash_root, text="Loading AI framework").pack(pady= 20)
-splash_root.mainloop()"
-'''
-
 root = Tk()
 root.title("Font Recognizer")
 root.geometry("700x400")
