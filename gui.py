@@ -21,6 +21,12 @@ def pick_cover(event: Event = Event()):
     output.config(text=main.get_predictions(predictions[0]))
 
 
+'''
+splash_root = Tk()
+splash_root.geometry("700x200")
+Label(splash_root, text="Loading AI framework").pack(pady= 20)
+splash_root.mainloop()"
+'''
 
 root = Tk()
 root.title("Font Recognizer")
@@ -64,5 +70,16 @@ notebook.add(main_screen, text="Main")
 notebook.add(dashboard_screen, text="Dashboard")
 
 model_file = 'EfficientNetV2B1_model'
-model = keras.models.load_model(model_file)
+model = None
+
+
+def callback(e):
+    global model
+    # your code here
+    model = keras.models.load_model(model_file)
+    root.unbind('<Visibility>')  # only call `callback` the first time `root` becomes visible
+
+
+root.bind('<Visibility>', callback)  # call `callback` whenever `root` becomes visible
+
 root.mainloop()
