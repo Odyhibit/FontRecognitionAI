@@ -1,9 +1,11 @@
 import os
-import model_functions as mf
-import matplotlib.pyplot as plt
+
 import matplotlib.cm
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import confusion_matrix
+
+import model_functions as mf
 
 
 def show_confusion_matrix():
