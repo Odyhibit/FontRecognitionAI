@@ -1,9 +1,14 @@
 import tkinter.filedialog
+import io
 from tkinter import *
 from tkinter import ttk
+import matplotlib
+
+from matplotlib import pyplot as plt
+
 from utils import model_functions as mf
 from tensorflow import keras as keras
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageOps
 
 
 def pick_cover(event: Event = Event()):
@@ -18,12 +23,42 @@ def pick_cover(event: Event = Event()):
     preview_lbl.configure(image=preview_img)
     preview_lbl.image = preview_img
     predictions = mf.predict_from_image(test_img, model)
+    predictions_to_image(predictions)
     output.config(text=mf.get_prediction_str(predictions[0]))
 
 
+def predictions_to_image(prediction):
+    matplotlib.use("Agg")
+    prediction_list = prediction[0].tolist()
+    label_list = mf.get_labels()
+    size_list = prediction_list
+    sizes, labels = [], []
+    for i, num in enumerate(prediction_list):
+        if num >= .01:
+            sizes.append(size_list[i])
+            labels.append(label_list[i])
+    plt.rcParams["figure.figsize"] = [3.50, 2.50]
+    plt.rcParams["figure.autolayout"] = True
+
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels)
+    #plt.show()
+    img_buf = io.BytesIO()
+    plt.savefig(img_buf, format='png')
+
+    im = Image.open(img_buf)
+    pie_chart_img = ImageOps.contain(im, (340, 340))
+    pie_chart_img = ImageTk.PhotoImage(pie_chart_img)
+
+    #im.show(title="My Image")
+    output.configure(image=pie_chart_img)
+    output.image = pie_chart_img
+    img_buf.close()
+    print("buffer closed")
+
 root = Tk()
 root.title("Font Recognizer - Loading AI Framework")
-root.geometry("700x400")
+root.geometry("900x400")
 
 # notebook settings
 notebook = ttk.Notebook(root)
@@ -49,7 +84,8 @@ preview_lbl = Label(main_screen, bd=2, relief="groove", image=placeholder)
 preview_lbl.grid(column=0, row=1, rowspan=2, sticky="S", padx=4, pady=6)
 output_lbl = Label(main_screen, text="Font   Certainty", height=1)
 output_lbl.grid(column=1, row=1, sticky="S")
-output = Label(main_screen, bd=2, relief="groove", width=16, height=14)
+placeholder_short = ImageTk.PhotoImage(Image.open("utils/placeholder_short.png"))
+output = Label(main_screen, bd=2, relief="groove", image=placeholder_short)
 output.grid(column=1, row=2, sticky="NSEW", padx=4, pady=6)
 
 # dashboard tab widgets
