@@ -1,9 +1,9 @@
 import tkinter.filedialog
 from tkinter import *
 from tkinter import ttk
-import main
+from utils import model_functions as mf
 from tensorflow import keras as keras
-from PIL import Image, ImageTk, ImageOps
+from PIL import Image, ImageTk
 
 
 def pick_cover(event: Event = Event()):
@@ -12,17 +12,17 @@ def pick_cover(event: Event = Event()):
     if not file_name:
         return
     image_path_str.set(file_name)
-    test_img = main.load_image(file_name)
+    test_img = mf.load_image(file_name)
     preview_img = Image.open(file_name)
     preview_img = ImageTk.PhotoImage(preview_img)
     preview_lbl.configure(image=preview_img)
     preview_lbl.image = preview_img
-    predictions = main.predict_from_image(test_img, model)
-    output.config(text=main.get_predictions(predictions[0]))
+    predictions = mf.predict_from_image(test_img, model)
+    output.config(text=mf.get_prediction_str(predictions[0]))
 
 
 root = Tk()
-root.title("Font Recognizer")
+root.title("Font Recognizer - Loading AI Framework")
 root.geometry("700x400")
 
 # notebook settings
@@ -44,7 +44,7 @@ file_lbl.grid(column=0, row=0, padx=4, pady=6)
 file_btn = Button(main_screen, text="Choose Image", command=pick_cover)
 file_btn.grid(column=1, row=0, padx=4, pady=6)
 # row 1
-placeholder = ImageTk.PhotoImage(Image.open("placeholder.png"))
+placeholder = ImageTk.PhotoImage(Image.open("utils/placeholder.png"))
 preview_lbl = Label(main_screen, bd=2, relief="groove", image=placeholder)
 preview_lbl.grid(column=0, row=1, rowspan=2, sticky="S", padx=4, pady=6)
 output_lbl = Label(main_screen, text="Font   Certainty", height=1)
@@ -70,9 +70,10 @@ def callback(e):
     global model
     # your code here
     model = keras.models.load_model(model_file)
+    root.title("Font Recognizer")
     root.unbind('<Visibility>')  # only call `callback` the first time `root` becomes visible
 
 
-root.bind('<Visibility>', callback)  # call `callback` whenever `root` becomes visible
+output.bind('<Visibility>', callback)
 
 root.mainloop()
