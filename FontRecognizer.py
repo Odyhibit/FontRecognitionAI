@@ -34,7 +34,7 @@ def predictions_to_image(prediction):
     size_list = prediction_list
     sizes, labels = [], []
     for i, num in enumerate(prediction_list):
-        if num >= .01:
+        if num >= .001:
             sizes.append(size_list[i])
             labels.append(label_list[i])
     plt.rcParams["figure.figsize"] = [3.50, 2.50]
@@ -47,14 +47,14 @@ def predictions_to_image(prediction):
     plt.savefig(img_buf, format='png')
 
     im = Image.open(img_buf)
-    pie_chart_img = ImageOps.contain(im, (340, 340))
+    pie_chart_img = ImageOps.contain(im, (256, 256))
     pie_chart_img = ImageTk.PhotoImage(pie_chart_img)
 
     #im.show(title="My Image")
     output.configure(image=pie_chart_img)
     output.image = pie_chart_img
     img_buf.close()
-    print("buffer closed")
+
 
 root = Tk()
 root.title("Font Recognizer - Loading AI Framework")
@@ -80,12 +80,12 @@ file_btn = Button(main_screen, text="Choose Image", command=pick_cover)
 file_btn.grid(column=1, row=0, padx=4, pady=6)
 # row 1
 placeholder = ImageTk.PhotoImage(Image.open("utils/placeholder.png"))
-preview_lbl = Label(main_screen, bd=2, relief="groove", image=placeholder)
+preview_lbl = Label(main_screen, bd=2,  image=placeholder)
 preview_lbl.grid(column=0, row=1, rowspan=2, sticky="S", padx=4, pady=6)
-output_lbl = Label(main_screen, text="Font   Certainty", height=1)
+output_lbl = Label(main_screen, text="Font Certainty", height=1)
 output_lbl.grid(column=1, row=1, sticky="S")
 placeholder_short = ImageTk.PhotoImage(Image.open("utils/placeholder_short.png"))
-output = Label(main_screen, bd=2, relief="groove", image=placeholder_short)
+output = Label(main_screen, bd=2,  image=placeholder_short)
 output.grid(column=1, row=2, sticky="NSEW", padx=4, pady=6)
 
 # dashboard tab widgets
